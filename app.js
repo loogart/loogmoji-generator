@@ -20,13 +20,13 @@
 
     // body
     var robotbody = new Image() ;
-    var robotbodynum=Math.floor (Math.random()*10)+1; // update to number of variations 
+    var robotbodynum=Math.floor (Math.random()*12)+1; // update to number of variations 
     var robotbodyname="body" + robotbodynum +".png";
     robotbody.src="./parts/body/" + robotbodyname;
 
         // Legs
     var robotlegs = new Image() ;
-    var robotlegsnum=Math.floor (Math.random()*10)+1; // update to number of variations 
+    var robotlegsnum=Math.floor (Math.random()*12)+1; // update to number of variations 
     var robotlegsname="legs" + robotlegsnum +".png";
     robotlegs.src="./parts/leg/" + robotlegsname;
         
