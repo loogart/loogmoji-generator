@@ -1,6 +1,5 @@
 window.onload = function () {
     const partFolders = ['head', 'body', 'legs'];
-    const partCounts = { head: 20, body: 12, legs: 12 }; // Adjust numbers according to actual part counts
     const partSelectors = {
         head: document.getElementById('head-selector'),
         body: document.getElementById('body-selector'),
@@ -14,32 +13,44 @@ window.onload = function () {
     ];
 
     let selectedParts = {
-        head: getRandomPart('head'),
-        body: getRandomPart('body'),
-        legs: getRandomPart('legs')
+        head: '',
+        body: '',
+        legs: ''
     };
 
     let selectedBgColor = predefinedBackgrounds[Math.floor(Math.random() * predefinedBackgrounds.length)];
 
-    function getRandomPart(partType) {
-        const partNum = Math.floor(Math.random() * partCounts[partType]) + 1;
-        return `./parts/${partType}/${partType}${partNum}.png`;
+    function fetchPartCounts() {
+        return fetch('./parts/parts.json')
+            .then(response => response.json())
+            .then(data => {
+                return partFolders.map(partType => {
+                    return { partType, count: data[partType].length, files: data[partType] };
+                });
+            });
     }
 
-    function loadPartSelectors() {
-        partFolders.forEach(partType => {
-            for (let i = 1; i <= partCounts[partType]; i++) {
-                const img = new Image();
-                img.src = `./parts/${partType}/${partType}${i}.png`;
-                img.classList.add('img-fluid', 'col-6', 'col-sm-4', 'p-1');
-                img.onclick = () => {
-                    selectedParts[partType] = img.src;
-                    buildRobot();
-                    const offcanvas = document.querySelector(`#${partType}Offcanvas`);
-                    const bsOffcanvas = new bootstrap.Offcanvas(offcanvas);
-                    bsOffcanvas.hide();
-                };
-                partSelectors[partType].appendChild(img);
+    function getFirstPart(partType, files) {
+        return files.length > 0 ? `./parts/${partType}/${files[0]}` : '';
+    }
+
+    function loadPartSelectors(partCounts) {
+        partCounts.forEach(({ partType, count, files }) => {
+            if (count > 0) {
+                files.forEach(file => {
+                    const img = new Image();
+                    img.src = `./parts/${partType}/${file}`;
+                    img.classList.add('img-fluid', 'col-6', 'col-sm-4', 'p-1');
+                    img.onclick = () => {
+                        selectedParts[partType] = img.src;
+                        buildRobot();
+                        const offcanvas = document.querySelector(`#${partType}Offcanvas`);
+                        const bsOffcanvas = new bootstrap.Offcanvas(offcanvas);
+                        bsOffcanvas.hide();
+                    };
+                    partSelectors[partType].appendChild(img);
+                });
+                selectedParts[partType] = getFirstPart(partType, files);
             }
         });
 
@@ -62,6 +73,8 @@ window.onload = function () {
             selectedBgColor = e.target.value;
             buildRobot();
         };
+
+        buildRobot();
     }
 
     function buildRobot() {
@@ -76,8 +89,8 @@ window.onload = function () {
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         const parts = [
-            { type: 'legs', y: 0 },
-            { type: 'body', y: 0 },
+            { type: 'legs', y: 600 },
+            { type: 'body', y: 300 },
             { type: 'head', y: 0 }
         ];
 
@@ -146,8 +159,8 @@ window.onload = function () {
 
             const parts = [
                 { type: 'legs', src: entry.legs, y: 0 },
-                { type: 'body', src: entry.body, y: 0 },
-                { type: 'head', src: entry.head, y: 0 }
+                { type: 'body', src: entry.body, y: 300 },
+                { type: 'head', src: entry.head, y: 600 }
             ];
 
             let loadedImages = 0;
@@ -161,16 +174,11 @@ window.onload = function () {
                     tempCtx.drawImage(img, x, part.y);
                     loadedImages++;
                     if (loadedImages === imagesToLoad) {
-                        tempCtx.scale(1/scaleFactor, 1/scaleFactor); // Reset scale
+                        tempCtx.scale(1 / scaleFactor, 1 / scaleFactor); // Reset scale
                         const imgElement = new Image();
                         imgElement.src = tempCanvas.toDataURL();
                         imgElement.classList.add('img-fluid', 'mb-2');
                         imgElement.onclick = () => loadFavorite(entry);
-
-                        const downloadButton = document.createElement('button');
-                        downloadButton.classList.add('btn', 'btn-success', 'me-2');
-                        downloadButton.innerHTML = '<i class="fas fa-download"></i>';
-                        downloadButton.onclick = () => downloadFavorite(entry);
 
                         const removeButton = document.createElement('button');
                         removeButton.classList.add('btn', 'btn-danger');
@@ -178,7 +186,6 @@ window.onload = function () {
                         removeButton.onclick = () => removeFromFavorites(index);
 
                         col.appendChild(imgElement);
-                        // col.appendChild(downloadButton);
                         col.appendChild(removeButton);
 
                         row.appendChild(col); // Append each column to the row
@@ -189,41 +196,6 @@ window.onload = function () {
 
         partSelectors.favorites.appendChild(row); // Append the row to the favorites container
     }
-
-    // function downloadFavorite(entry) {
-    //     const canvas = document.createElement('canvas');
-    //     canvas.width = 1000;
-    //     canvas.height = 1000;
-    //     const ctx = canvas.getContext('2d');
-
-    //     ctx.fillStyle = entry.background;
-    //     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    //     const parts = [
-    //         { type: 'legs', src: entry.legs, y: 0 },
-    //         { type: 'body', src: entry.body, y: 0 },
-    //         { type: 'head', src: entry.head, y: 0 }
-    //     ];
-
-    //     let loadedImages = 0;
-    //     const imagesToLoad = parts.length;
-
-    //     parts.forEach(part => {
-    //         const img = new Image();
-    //         img.src = part.src;
-    //         img.onload = () => {
-    //             const x = (canvas.width - img.width) / 2;
-    //             ctx.drawImage(img, x, part.y);
-    //             loadedImages++;
-    //             if (loadedImages === imagesToLoad) {
-    //                 const link = document.createElement('a');
-    //                 link.download = 'loogmoji3d.png';
-    //                 link.href = canvas.toDataURL();
-    //                 link.click();
-    //             }
-    //         };
-    //     });
-    // }
 
     function loadFavorite(entry) {
         console.log("Loading favorite:", entry);
@@ -242,19 +214,15 @@ window.onload = function () {
         updateFavoritesUI();
     }
 
-    loadPartSelectors();
-    buildRobot();
+    // Download canvas element as image
+    window.download_image = function() {
+        var link = document.createElement('a');
+        link.download = 'loogmoji3d.png';
+        link.href = document.getElementById('canvas').toDataURL();
+        link.click();
+    };
+
+    // Load part counts and initialize
+    fetchPartCounts().then(loadPartSelectors);
     updateFavoritesUI();
-}
-
-// Download canvas element as image
-window.download_image = function() {
-    var link = document.createElement('a');
-    link.download = 'loogmoji3d.png';
-    link.href = document.getElementById('canvas').toDataURL();
-    link.click();
 };
-
-loadPartSelectors();
-buildRobot();
-updateFavoritesUI();

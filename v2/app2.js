@@ -21,20 +21,13 @@ window.onload = function () {
     let selectedBgColor = predefinedBackgrounds[Math.floor(Math.random() * predefinedBackgrounds.length)];
 
     function fetchPartCounts() {
-        return Promise.all(partFolders.map(partType => 
-            fetch(`./parts/${partType}/`)
-                .then(response => response.text())
-                .then(data => {
-                    const parser = new DOMParser();
-                    const doc = parser.parseFromString(data, 'text/html');
-                    const files = Array.from(doc.querySelectorAll('a'))
-                        .map(a => a.href)
-                        .filter(href => href.match(/(head|body|legs)[0-9]+\.(png|jpg|jpeg)$/))
-                        .map(href => href.split('/').pop())
-                        .sort();
-                    return { partType, count: files.length, files };
-                })
-        ));
+        return fetch('./parts.json')
+            .then(response => response.json())
+            .then(data => {
+                return partFolders.map(partType => {
+                    return { partType, count: data[partType].length, files: data[partType] };
+                });
+            });
     }
 
     function getFirstPart(partType, files) {

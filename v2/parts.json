@@ -1,0 +1,5 @@
+{
+    "head": ["head1.png", "head2.png", "head3.png", "head4.png", "head5.png","head6.png","head7.png","head8.png","head9.png"],
+    "body": ["body1.png", "body2.png", "body3.png","body4.png", "body5.png", "body6.png","body7.png", "body8.png", "body9.png"],
+    "legs": ["legs1.png", "legs2.png", "legs3.png","legs4.png", "legs5.png", "legs6.png","legs7.png", "legs8.png", "legs9.png"]
+}
