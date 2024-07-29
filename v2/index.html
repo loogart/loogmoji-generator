@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    
+    <!-- FontAwesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMU6jz3kYZ/w7yssuIVDmr5wpx3OZmt8vCeD3p" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="style.css">
+
+    <title>Loogmoji Generator</title>
+</head>
+<body style="background-color: #f8f8f8;">
+<section class="py-4">
+    <div class="container text-center">
+        <span class="badge rounded-pill bg-warning text-dark">UNDER DEVELOPMENT</span>
+        <h1 class="h2 fw-bolder mb-4 mt-3">Loogmoji Remixer</h1>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6 sticky-sm-top">
+                <!-- canvas with Loogmoji -->
+                <div class="shadow border border-5 border-dark" style="border-radius:24px">
+                    <canvas id="canvas" class="d-block w-100" style="border-radius:18px"></canvas>
+                </div>
+                <button onclick="addToFavorites()" class="btn btn-lg btn-warning mt-3 w-100"><i class="fas fa-star"></i> Favourite</button>
+            </div>
+            <div class="col-md-6">
+                <!-- Action buttons -->
+                <div class="row">
+                    <div class="col-6 d-grid">
+                        <button onClick="window.location.reload();" class="btn btn-lg btn-primary mt-3">🪄 REMIX</button>
+                    </div>
+                    <div class="col-6 d-grid">
+                        <button onclick="download_image()" class="btn btn-lg btn-success mt-3">✅ Download</button>
+                    </div>
+                </div>
+
+                <!-- Background color selector -->
+                <button class="btn btn-lg btn-info mt-3 w-100" data-bs-toggle="offcanvas" data-bs-target="#bgOffcanvas" aria-controls="bgOffcanvas">Choose Background</button>
+
+                <!-- Head selector -->
+                <button class="btn btn-lg btn-warning mt-3 w-100" data-bs-toggle="offcanvas" data-bs-target="#headOffcanvas" aria-controls="headOffcanvas">Choose Head</button>
+
+                <!-- Body selector -->
+                <button class="btn btn-lg btn-danger mt-3 w-100" data-bs-toggle="offcanvas" data-bs-target="#bodyOffcanvas" aria-controls="bodyOffcanvas">Choose Body</button>
+
+                <!-- Legs selector -->
+                <button class="btn btn-lg btn-success mt-3 w-100" data-bs-toggle="offcanvas" data-bs-target="#legsOffcanvas" aria-controls="legsOffcanvas">Choose Legs</button>
+
+                <!-- Favorites button -->
+                <button class="btn btn-lg btn-secondary mt-3 w-100" data-bs-toggle="offcanvas" data-bs-target="#favoritesOffcanvas" aria-controls="favoritesOffcanvas">View Favourites</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Offcanvas Panels -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="bgOffcanvas" aria-labelledby="bgOffcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="bgOffcanvasLabel">Choose Background Color</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="row" id="bg-selector"></div>
+    <input type="color" id="colorPicker" class="mt-3 w-100">
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="headOffcanvas" aria-labelledby="headOffcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="headOffcanvasLabel">Choose Head</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="row" id="head-selector"></div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="bodyOffcanvas" aria-labelledby="bodyOffcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="bodyOffcanvasLabel">Choose Body</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="row" id="body-selector"></div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="legsOffcanvas" aria-labelledby="legsOffcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="legsOffcanvasLabel">Choose Legs</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="row" id="legs-selector"></div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="favoritesOffcanvas" aria-labelledby="favoritesOffcanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="favoritesOffcanvasLabel">View Favourites</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="row" id="favorites-container"></div>
+  </div>
+</div>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="app.js"></script>
+</body>
+</html>
