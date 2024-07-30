@@ -14,104 +14,99 @@
     <!-- <link rel="stylesheet" href="style.css"> -->
 
     <title>Loogmoji Generator</title>
+    <style>
+      .offcanvas-bottom{
+        height:auto;
+        max-height:50%;
+      }
+    </style>
 </head>
 <body style="background-color: #f8f8f8;">
-<section class="py-4">
-    <div class="container text-center">
+<section class="py-2" style="margin-bottom:100px">
+    <div class="container-fluid text-center">
         <!-- <span class="badge rounded-pill bg-warning text-dark">UNDER DEVELOPMENT</span> -->
-        <h1 class="display-1 fw-bolder mb-4 mt-3">Loogmoji Remixer</h1>
+        <h1 class="display-2 fw-bolder mb-4 mt-3">Loogmoji Remixer</h1>
 
         <div class="row justify-content-center">
-            <div class="col-md-5 col-md-4 sticky-sm-top">
+            <div class="col-md-6 col-md-4">
                 <!-- canvas with Loogmoji -->
-                    <canvas id="canvas" class="d-block w-100 shadow border-dark rounded-3"></canvas>
-                    <div class="row">
-                      <div class="col-lg-6 d-grid">
-                        <button onclick="addToFavorites()" class="btn btn-lg btn-outline-dark mt-3 w-100"><i class="fas fa-full fa-heart text-danger"></i> Add to Faves</button>
-                      </div>
-                    <div class="col-lg-6 d-grid">
-                      <button onclick="download_image()" class="btn btn-lg btn-success mt-3"> <i class="fa-sharp fa-regular fa-arrow-down-to-line"></i>  Download</button>
-                  </div>
-                    </div>
-
-            </div>
-            <div class="col-md-5 col-md-4">
-                <!-- Action buttons -->
-                <!-- <div class="row">
+                <canvas id="canvas" class="d-block w-100 shadow border-dark rounded-3"></canvas>
+                <div class="row">
                     <div class="col-6 d-grid">
-                        <button onClick="window.location.reload();" class="btn btn-lg btn-primary mt-3">🪄 REMIX</button>
+                        <button onclick="addToFavorites()" class="btn btn-lg btn-outline-dark mt-3 w-100"><i class="fas fa-full fa-plus text-success"></i> Add to Faves</button>
                     </div>
-                </div> -->
+                    <div class="col-6 d-grid">
+                      <!-- Favorites button -->
+                      <button class="btn btn-lg btn-outline-dark mt-3 w-100" data-bs-toggle="offcanvas" data-bs-target="#favoritesOffcanvas" aria-controls="favoritesOffcanvas"><i class="fas fa-full fa-heart text-danger"></i> View Faves</button>                      
+                    </div>
+                </div>
+                <button onclick="download_image()" class="btn btn-lg p-4 w-100 btn-success mt-3"> <i class="fa-sharp fa-regular fa-arrow-down-to-line"></i>  Download</button>
 
-                <!-- Head selector -->
-                <button class="btn btn-lg btn-outline-dark  mt-3 w-100" data-bs-toggle="offcanvas" data-bs-target="#headOffcanvas" aria-controls="headOffcanvas">Choose Head</button>
-
-                <!-- Body selector -->
-                <button class="btn btn-lg btn-outline-dark  mt-3 w-100" data-bs-toggle="offcanvas" data-bs-target="#bodyOffcanvas" aria-controls="bodyOffcanvas">Choose Body</button>
-
-                <!-- Legs selector -->
-                <button class="btn btn-lg btn-outline-dark  mt-3 w-100" data-bs-toggle="offcanvas" data-bs-target="#legsOffcanvas" aria-controls="legsOffcanvas">Choose Legs</button>
-
-                <!-- Background color selector -->
-                <button class="btn btn-lg btn-outline-dark mt-3 w-100" data-bs-toggle="offcanvas" data-bs-target="#bgOffcanvas" aria-controls="bgOffcanvas">Choose Background</button>
-
-                <!-- Favorites button -->
-                <button class="btn btn-lg btn-outline-dark mt-3 w-100" data-bs-toggle="offcanvas" data-bs-target="#favoritesOffcanvas" aria-controls="favoritesOffcanvas">View Favourites</button>
             </div>
+
+            
         </div>
+
     </div>
 </section>
 
+<nav class="nav nav-pills nav-fill fixed-bottom bg-light border rounded-3 m-4">
+  <a class="nav-link text-dark p-3" href="#" data-bs-toggle="offcanvas" data-bs-target="#headOffcanvas" aria-controls="headOffcanvas">Head</a>
+  <a class="nav-link text-dark p-3" href="#"data-bs-toggle="offcanvas" data-bs-target="#bodyOffcanvas" aria-controls="bodyOffcanvas">Body</a>
+  <a class="nav-link text-dark p-3" href="#" data-bs-toggle="offcanvas" data-bs-target="#legsOffcanvas" aria-controls="legsOffcanvas">Legs</a>
+  <a class="nav-link text-dark p-3" href="#" data-bs-toggle="offcanvas" data-bs-target="#bgOffcanvas" aria-controls="bgOffcanvas">Color</a>
+</nav>
+
 <!-- Offcanvas Panels -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="bgOffcanvas" aria-labelledby="bgOffcanvasLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="bgOffcanvasLabel">Choose Background Color</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <div class="row" id="bg-selector"></div>
-    <input type="color" id="colorPicker" class="mt-3 w-100">
-  </div>
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="bgOffcanvas" aria-labelledby="bgOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="bgOffcanvasLabel">Choose Background Color</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="row" id="bg-selector"></div>
+        <input type="color" id="colorPicker" class="mt-3 w-100">
+    </div>
 </div>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="headOffcanvas" aria-labelledby="headOffcanvasLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="headOffcanvasLabel">Choose Head</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <div class="row" id="head-selector"></div>
-  </div>
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="headOffcanvas" aria-labelledby="headOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="headOffcanvasLabel">Choose Head</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="d-flex flex-wrap" id="head-selector"></div>
+    </div>
 </div>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="bodyOffcanvas" aria-labelledby="bodyOffcanvasLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="bodyOffcanvasLabel">Choose Body</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <div class="row" id="body-selector"></div>
-  </div>
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="bodyOffcanvas" aria-labelledby="bodyOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="bodyOffcanvasLabel">Choose Body</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="d-flex flex-wrap" id="body-selector"></div>
+    </div>
 </div>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="legsOffcanvas" aria-labelledby="legsOffcanvasLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="legsOffcanvasLabel">Choose Legs</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <div class="row" id="legs-selector"></div>
-  </div>
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="legsOffcanvas" aria-labelledby="legsOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="legsOffcanvasLabel">Choose Legs</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="d-flex flex-wrap" id="legs-selector"></div>
+    </div>
 </div>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="favoritesOffcanvas" aria-labelledby="favoritesOffcanvasLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="favoritesOffcanvasLabel">View Favourites</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    <div class="row" id="favorites-container"></div>
-  </div>
+<div class="offcanvas offcanvas-bottom" tabindex="-1" id="favoritesOffcanvas" aria-labelledby="favoritesOffcanvasLabel">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="favoritesOffcanvasLabel">View Favourites</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="d-flex flex-wrap" id="favorites-container"></div>
+    </div>
 </div>
 
 <!-- Bootstrap Bundle with Popper -->

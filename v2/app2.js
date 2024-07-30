@@ -40,13 +40,15 @@ window.onload = function () {
                 files.forEach(file => {
                     const img = new Image();
                     img.src = `./parts/${partType}/${file}`;
-                    img.classList.add('img-fluid', 'col-6', 'col-sm-4', 'p-1');
+                    img.classList.add('img-fluid', 'col-4', 'col-sm-2', 'p-1');
                     img.onclick = () => {
                         selectedParts[partType] = img.src;
                         buildRobot();
                         const offcanvas = document.querySelector(`#${partType}Offcanvas`);
-                        const bsOffcanvas = new bootstrap.Offcanvas(offcanvas);
-                        bsOffcanvas.hide();
+                        const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+                        if (bsOffcanvas) {
+                            bsOffcanvas.hide();
+                        }
                     };
                     partSelectors[partType].appendChild(img);
                 });
@@ -62,8 +64,10 @@ window.onload = function () {
                 selectedBgColor = color;
                 buildRobot();
                 const offcanvas = document.querySelector('#bgOffcanvas');
-                const bsOffcanvas = new bootstrap.Offcanvas(offcanvas);
-                bsOffcanvas.hide();
+                const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+                if (bsOffcanvas) {
+                    bsOffcanvas.hide();
+                }
             };
             partSelectors.bg.appendChild(div);
         });
@@ -141,7 +145,7 @@ window.onload = function () {
 
         favorites.forEach((entry, index) => {
             const col = document.createElement('div');
-            col.classList.add('col-6', 'mb-3'); // Each favorite occupies half the row (2 columns)
+            col.classList.add('col-4', 'mb-3'); // Each favorite occupies a third of the row (3 columns)
 
             // Create a temporary canvas to draw the complete avatar
             const tempCanvas = document.createElement('canvas');
@@ -217,7 +221,7 @@ window.onload = function () {
     // Download canvas element as image
     window.download_image = function() {
         var link = document.createElement('a');
-        link.download = 'loogmoji3d.png';
+        link.download = 'loogmoji.png';
         link.href = document.getElementById('canvas').toDataURL();
         link.click();
     };
